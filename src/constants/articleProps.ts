@@ -176,4 +176,6 @@ export const defaultArticleState = {
 	fontSizeOption: fontSizeOptions[0],
 };
 
+1;
+
 export type ArticleStateType = typeof defaultArticleState;
