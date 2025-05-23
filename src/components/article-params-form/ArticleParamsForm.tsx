@@ -4,7 +4,7 @@ import clsx from 'clsx';
 
 import styles from './ArticleParamsForm.module.scss';
 import { RadioGroup } from 'src/ui/radio-group';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Select } from 'src/ui/select';
 import { Separator } from 'src/ui/separator';
 import {
@@ -23,31 +23,54 @@ type ArticleParamsFormProps = {
 export const ArticleParamsForm = ({
 	setStateArticle,
 }: ArticleParamsFormProps) => {
-	const [opened, setOpened] = useState(false);
+	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [formState, setFormState] =
 		useState<ArticleStateType>(defaultArticleState);
+	const rootRef = useRef<HTMLDivElement>(null);
 
 	const setDefaultState = () => {
 		setFormState(defaultArticleState);
 		setStateArticle(defaultArticleState);
-		setOpened(false);
+		setIsMenuOpen(false);
 	};
 
 	const setState = (evt: React.SyntheticEvent) => {
 		evt.preventDefault();
 		setStateArticle(formState);
 	};
+	useEffect(() => {
+		const handleClick = (event: MouseEvent) => {
+			const { target } = event;
+			if (target instanceof Node && !rootRef.current?.contains(target)) {
+				setIsMenuOpen(false);
+			}
+		};
+		const handleEscape = (e: KeyboardEvent) => {
+			if (e.key === 'Escape') {
+				setIsMenuOpen(false);
+			}
+		};
+		if (isMenuOpen) {
+			window.addEventListener('mousedown', handleClick);
+			document.addEventListener('keydown', handleEscape);
+		}
+		return () => {
+			window.removeEventListener('mousedown', handleClick);
+			document.removeEventListener('keydown', handleEscape);
+		};
+	}, [isMenuOpen]);
 	return (
 		<>
 			<ArrowButton
-				isOpen={opened}
+				isOpen={isMenuOpen}
 				onClick={() => {
-					setOpened((prev) => !prev);
+					setIsMenuOpen((prev) => !prev);
 				}}
 			/>
 			<aside
+				ref={rootRef}
 				className={
-					opened
+					isMenuOpen
 						? clsx(styles.container, styles.container_open)
 						: styles.container
 				}>
