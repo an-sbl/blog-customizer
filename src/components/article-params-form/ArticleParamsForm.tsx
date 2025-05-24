@@ -6,6 +6,7 @@ import styles from './ArticleParamsForm.module.scss';
 import { RadioGroup } from 'src/ui/radio-group';
 import { useState, useEffect, useRef } from 'react';
 import { Select } from 'src/ui/select';
+import { Text } from 'src/ui/text';
 import { Separator } from 'src/ui/separator';
 import {
 	ArticleStateType,
@@ -75,6 +76,9 @@ export const ArticleParamsForm = ({
 						: styles.container
 				}>
 				<form className={styles.form} onSubmit={setState}>
+					<Text as='h1' size={31} weight={800} uppercase dynamicLite>
+						Задайте параметры
+					</Text>
 					<Select
 						selected={formState.fontFamilyOption}
 						options={fontFamilyOptions}
@@ -97,7 +101,8 @@ export const ArticleParamsForm = ({
 								...oprevState,
 								fontSizeOption: selected,
 							}))
-						}></RadioGroup>
+						}
+					/>
 					<Select
 						selected={formState.fontColor}
 						options={fontColors}
